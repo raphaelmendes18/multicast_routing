@@ -44,10 +44,8 @@ class Population(object):
             partner1, partner2 = self.selection()
             child = self.crossover(partner1, partner2)
             child = Solution(child, self.root_node, self.destination_nodes, build_tree=False)
-            # if np.random.uniform(0,1) <= self.mutation_rate:
-            #     child1.mutation()
-            # if np.random.uniform(0,1) <= self.mutation_rate:
-            #     child2.mutation()
+            if np.random.uniform(0,1) <= self.mutation_rate:
+                child.mutation()
             offspring.append(child)
 
         self.population = self.population + offspring

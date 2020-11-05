@@ -35,7 +35,8 @@ class Solution:
             self.multicast_tree.remove_edge(random_edge_to_remove)
             edges_removed += 1
         self.multicast_tree.reconnect(G)
-        
+        # print(f'Has Cycle? {self.multicast_tree.has_cycle()}')
+        # self.multicast_tree.draw()
 class MonoObjectiveSolution(Solution, Objective):
     pass
 

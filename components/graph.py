@@ -2,6 +2,7 @@ import numpy as np
 import random
 from components.edge import Edge
 import networkx as nx
+import matplotlib.pyplot as plt
 
 class Graph:
 
@@ -85,13 +86,35 @@ class Graph:
 
     def remove_edge(self, edge):
         self.graph.remove_edge(*edge)
-        
+
     def __str__(self):
         graph_as_str = ''
         for i in self.graph.nodes:
             graph_as_str += f'Node {i} connections: {",".join([f"{j}" for j in list(self.graph.neighbors(i))])}\n'
         return graph_as_str
+    
+    def draw(self):
+        G = self.graph
+        pos = nx.spring_layout(G)  # positions for all nodes
+        # nodes
+        nx.draw_networkx_nodes(G, pos, node_size=700)
+
+        # edges
+        nx.draw_networkx_edges(G, pos, width=6)
         
+        # labels
+        nx.draw_networkx_labels(G, pos, font_size=20, font_family="sans-serif")
+
+        plt.axis("off")
+        plt.show()
+    
+    def has_cycle(self):
+        try:
+            cycles = nx.find_cycle(self.graph)
+            return True
+        except:
+            return False
+    
 class MulticastRoute(Graph):
     
     def __init__(self, G, root_node, destination_nodes, build_tree=True):
@@ -101,7 +124,7 @@ class MulticastRoute(Graph):
         else:
             tree = self.prune_multicast_tree(G.graph, root_node, destination_nodes)
         self.root_node = root_node
-        self.destination_ndoes = destination_nodes
+        self.destination_nodes = destination_nodes
         super().__init__(graph=tree)
     
     def build_multicast_route(self, G, root_node, destination_nodes):
@@ -152,10 +175,10 @@ class MulticastRoute(Graph):
 
         return multicast_tree    
     
-    def get_max_delay(self, root_node, destination_nodes):
+    def get_max_delay(self, **kwargs):
         delays_to_destination = []
-        for destination in destination_nodes:
-            shortest_path = self.shortest_path(source=root_node, target=destination, weight='delay')
+        for destination in self.destination_nodes:
+            shortest_path = self.shortest_path(source=self.root_node, target=destination, weight='delay')
             delay = self.path_weight(shortest_path, 'delay')
             delays_to_destination.append(delay)
         return max(delays_to_destination)
@@ -185,7 +208,12 @@ class MulticastRoute(Graph):
                     pass
             # 3. Randomly pick one edge
             new_edge = random.choice(available_edges)
-            aux_tree.add_edge(new_edge[0],new_edge[1])
+            try:
+                test_cycle = aux_tree.copy()
+                test_cycle.add_edge(new_edge[0],new_edge[1])
+                cycles = nx.find_cycle(test_cycle)
+            except:
+                aux_tree.add_edge(new_edge[0],new_edge[1])
             
             # 5. Rebuild aux_tree 
             full_tree = nx.Graph()
@@ -194,3 +222,20 @@ class MulticastRoute(Graph):
                 full_tree.add_edge(edge_obj.start, edge_obj.end, **edge_obj.as_dict())   
             
             self.graph = full_tree
+
+    def draw(self):
+        G = self.graph
+        pos = nx.spring_layout(G)  # positions for all nodes
+        # nodes
+        nx.draw_networkx_nodes(G, pos, nodelist= [node for node in G.nodes() if node not in self.destination_nodes and node != self.root_node],node_size=700)
+        nx.draw_networkx_nodes(G, pos, nodelist= [node for node in G.nodes() if node in self.destination_nodes and node != self.root_node],node_size=700, node_color='red')
+        nx.draw_networkx_nodes(G, pos, nodelist= [self.root_node],node_size=700, node_color='green')
+        # edges
+        nx.draw_networkx_edges(G, pos, width=6)
+        
+        # labels
+        nx.draw_networkx_labels(G, pos, font_size=20, font_family="sans-serif")
+
+        plt.axis("off")
+        plt.title(f'Max Delay: {self.get_max_delay()} - Cost: {self.get_total_cost()}')
+        plt.show()
