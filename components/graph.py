@@ -160,7 +160,10 @@ class MulticastRoute(Graph):
         multicast_tree = self.prune_multicast_tree(multicast_tree, root_node, destination_nodes)
         
         return multicast_tree
-     
+    
+    def prune(self):
+        self.graph = self.prune_multicast_tree(self.graph, self.root_node, self.destination_nodes)
+
     def prune_multicast_tree(self, multicast_tree, root_node, destination_nodes):
         
         nodes_to_remove = [0] # initialize as not empty, will be overwritten later on
@@ -183,6 +186,14 @@ class MulticastRoute(Graph):
             delays_to_destination.append(delay)
         return max(delays_to_destination)
 
+    def get_average_delay(self, **kwargs):
+        delays_to_destination = []
+        for destination in self.destination_nodes:
+            shortest_path = self.shortest_path(source=self.root_node, target=destination, weight='delay')
+            delay = self.path_weight(shortest_path, 'delay')
+            delays_to_destination.append(delay)
+        return sum(delays_to_destination)/len(delays_to_destination)
+
     def get_total_cost(self):
         total_cost = 0
         for edge in self.graph.edges():
@@ -190,6 +201,13 @@ class MulticastRoute(Graph):
 
         return total_cost
     
+    def get_total_delay(self):
+        total_delay = 0
+        for edge in self.graph.edges():
+            total_delay += self.get_edge(edge=edge, attribute='delay')
+
+        return total_delay
+
     def reconnect(self, G):
         aux_tree = self.graph.copy()
         while nx.is_connected(aux_tree) == False: # 4. Repeat process until graph is connected

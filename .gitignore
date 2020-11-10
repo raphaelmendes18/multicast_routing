@@ -1,3 +1,9 @@
 *.pyc
 __pycache__/
 .vscode/
+*.log
+FUN*
+VAR*
+multiobjective/dynamic_front_vis
+multiobjective/dynamic_front
+multiobjective/*.log

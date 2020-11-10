@@ -43,7 +43,7 @@ class Population(object):
         while len(offspring) < int(self.cross_rate*self.pop_size):
             partner1, partner2 = self.selection()
             child = self.crossover(partner1, partner2)
-            child = Solution(child, self.root_node, self.destination_nodes, build_tree=False)
+            child = MulticastSolution(child, self.root_node, self.destination_nodes, build_tree=False)
             if np.random.uniform(0,1) <= self.mutation_rate:
                 child.mutation()
             offspring.append(child)

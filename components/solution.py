@@ -4,8 +4,9 @@ import random
 import networkx as nx
 from components.edge import Edge
 from components.objective import Objective
+from components.mutation import Mutation
 import random
-class Solution:
+class MulticastSolution:
 
     '''
     The solution is represented by a adjancency matrix, which represents a tree, that is a valid solution for the multicast problem
@@ -25,19 +26,7 @@ class Solution:
     def w(self, delay):
         return 1.0 if delay <= self.max_delay else self.alpha
 
-    def mutation(self, number_of_disconnections, G):
-        # 1. Select Edges to be removed
-        edges_to_remove = int(len(list(self.multicast_tree.edges()))*number_of_disconnections)
-        edges_removed = 0
-        while edges_removed < edges_to_remove:
-            edges = list(self.multicast_tree.edges())
-            random_edge_to_remove = random.choice(edges)
-            self.multicast_tree.remove_edge(random_edge_to_remove)
-            edges_removed += 1
-        self.multicast_tree.reconnect(G)
-        # print(f'Has Cycle? {self.multicast_tree.has_cycle()}')
-        # self.multicast_tree.draw()
-class MonoObjectiveSolution(Solution, Objective):
+class MonoObjectiveSolution(MulticastSolution, Objective, Mutation):
     pass
 
             

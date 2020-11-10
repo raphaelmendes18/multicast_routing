@@ -3,7 +3,7 @@ from components.graph import Graph, MulticastRoute
 from components.edge import Edge
 import networkx as nx
 import random
-from components.solution import Solution
+from components.solution import MulticastSolution
 class Crossover:
     def crossover(self, partner1, partner2):
         raise NotImplementedError('CrossoverNotImplemented')
