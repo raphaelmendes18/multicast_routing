@@ -241,7 +241,8 @@ class MulticastRoute(Graph):
             
             self.graph = full_tree
 
-    def draw(self):
+    def draw(self, path=None):
+        plt.clf()
         G = self.graph
         pos = nx.spring_layout(G)  # positions for all nodes
         # nodes
@@ -256,4 +257,7 @@ class MulticastRoute(Graph):
 
         plt.axis("off")
         plt.title(f'Max Delay: {self.get_max_delay()} - Cost: {self.get_total_cost()}')
-        plt.show()
+        if path is None:
+            plt.show()
+        else:
+            plt.savefig(path)

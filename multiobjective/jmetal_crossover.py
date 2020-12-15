@@ -34,7 +34,7 @@ class MulticastCrossover(BuenoOliveiraCrossover, Crossover[MulticastMultiObjecti
                                                 number_of_constraints = parents[0].number_of_constraints,
                                                 max_delay = parents[0].max_delay,
                                                 alpha = parents[0].alpha,
-                                                omega = parents[0].omega,
+                                                phi = parents[0].phi,
                                                 build_tree=False
                                                 )
         return [child]

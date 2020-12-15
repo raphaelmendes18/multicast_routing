@@ -14,7 +14,7 @@ class MulticastMultiObjectiveSolution(Solution, MulticastSolution):
                 number_of_constraints: int = 0,
                 max_delay: int = 25, 
                 alpha:float = 0.5, 
-                omega:int = 1,
+                phi:int = 1,
                 build_tree:bool = True
                 ):
         self.number_of_variables = number_of_variables
@@ -33,7 +33,7 @@ class MulticastMultiObjectiveSolution(Solution, MulticastSolution):
             self.multicast_tree = MulticastRoute(graph, root_node, destination_nodes, build_tree=False)
         self.max_delay = max_delay
         self.alpha = alpha
-        self.omega = omega
+        self.phi = phi
         self.root_node = root_node
         self.destination_nodes = destination_nodes
 

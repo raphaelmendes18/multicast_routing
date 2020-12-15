@@ -1,4 +1,6 @@
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
+from jmetal.algorithm.multiobjective.spea2 import SPEA2
+from jmetal.algorithm.multiobjective.moead import MOEAD
 from multiobjective.jmetal_problem import MulticastProblem
 from multiobjective.jmetal_mutation import MulticastMutation
 from multiobjective.jmetal_crossover import MulticastCrossover
@@ -20,7 +22,7 @@ if __name__ == '__main__':
     Cr: float = 0.5
     max_evaluations: float = generations*pop_size
     problem: MulticastProblem = MulticastProblem(Graph = gr, root_node = root_node, destination_nodes = destination_nodes)
-    algorithm = NSGAII(
+    algorithm = SPEA2(
         problem=problem,
         population_size=pop_size,
         offspring_population_size=int(pop_size*Cr),
@@ -37,8 +39,10 @@ if __name__ == '__main__':
     print_variables_to_file(front, 'VAR.'+ algorithm.label)
 
     plot_front = Plot(title='Pareto front approximation', axis_labels=['cost', 'delay'])
-    plot_front.plot(front, label='NSGAII', filename='NSGAII', format='png')
+    plot_front.plot(front, label='SPEA2', filename='SPEA2', format='png')
 
-    print(f'Algorithm: ${algorithm.get_name()}')
-    print(f'Problem: ${problem.get_name()}')
-    print(f'Computing time: ${algorithm.total_computing_time}')
+    print(f'Algorithm: {algorithm.get_name()}')
+    print(f'Problem: {problem.get_name()}')
+    print(f'Computing time: {algorithm.total_computing_time}')
+    
+    algorithm.solutions[0].multicast_tree.draw()

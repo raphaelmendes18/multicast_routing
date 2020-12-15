@@ -18,4 +18,4 @@ class Objective:
 
         delay_penalty = np.prod(delays_to_destination)
 
-        self.fitness = self.omega*(delay_penalty/total_cost)
+        self.fitness = self.phi*(delay_penalty/total_cost)

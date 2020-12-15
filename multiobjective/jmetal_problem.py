@@ -38,22 +38,74 @@ class MulticastProblem(Problem[MulticastMultiObjectiveSolution]):
 
     def evaluate(self, solution: MulticastMultiObjectiveSolution) -> MulticastMultiObjectiveSolution:
         
-        solution.objectives[0] = self.__f_cost(solution)
-        solution.objectives[1] = self.__f_delay_1(solution)
+        solution.objectives[0] = self._f_cost(solution)
+        solution.objectives[1] = self._f_delay_1(solution)
 
         return solution
 
-    def __f_cost(self, solution):
+    def _f_cost(self, solution):
         return solution.multicast_tree.get_total_cost()
 
-    def __f_delay_1(self, solution):
+    def _f_delay_1(self, solution):
         return solution.multicast_tree.get_total_delay()
 
-    def __f_delay_2(self, solution):
+    def _f_delay_2(self, solution):
         return solution.multicast_tree.get_average_delay()
 
-    def __f_delay_3(self, solution):
+    def _f_delay_3(self, solution):
         return solution.multicast_tree.get_max_delay()
 
     def get_name(self) -> str:
         return 'Multicast Problem'
+
+class MulticastProblemExp1(MulticastProblem):
+    pass
+
+class MulticastProblemExp2(MulticastProblem):
+    def evaluate(self, solution: MulticastMultiObjectiveSolution) -> MulticastMultiObjectiveSolution:
+        
+        solution.objectives[0] = self._f_cost(solution)
+        solution.objectives[1] = self._f_delay_2(solution)
+        return solution
+
+class MulticastProblemExp3(MulticastProblem):
+    def evaluate(self, solution: MulticastMultiObjectiveSolution) -> MulticastMultiObjectiveSolution:
+        
+        solution.objectives[0] = self._f_cost(solution)
+        solution.objectives[1] = self._f_delay_3(solution)
+        return solution
+
+class MulticastProblemExp4(MulticastProblem):
+
+    MINIMIZE = -1
+    MAXIMIZE = 1
+
+    def __init__(self, Graph: Graph, root_node: int, destination_nodes: List[int]):
+        
+        super().__init__(Graph, root_node, destination_nodes)
+        self.number_of_variables: int = 3
+        self.number_of_objectives: int = 3
+
+    def evaluate(self, solution: MulticastMultiObjectiveSolution) -> MulticastMultiObjectiveSolution:
+        
+        solution.objectives[0] = self._f_cost(solution)
+        solution.objectives[1] = self._f_delay_1(solution)
+        solution.objectives[2] = self._f_delay_2(solution)
+        return solution
+
+class MulticastProblemExp5(MulticastProblemExp4):
+    def evaluate(self, solution: MulticastMultiObjectiveSolution) -> MulticastMultiObjectiveSolution:
+        
+        solution.objectives[0] = self._f_cost(solution)
+        solution.objectives[1] = self._f_delay_1(solution)
+        solution.objectives[2] = self._f_delay_3(solution)
+        return solution
+
+class MulticastProblemExp6(MulticastProblemExp4):
+    def evaluate(self, solution: MulticastMultiObjectiveSolution) -> MulticastMultiObjectiveSolution:
+        
+        solution.objectives[0] = self._f_cost(solution)
+        solution.objectives[1] = self._f_delay_2(solution)
+        solution.objectives[2] = self._f_delay_3(solution)
+        return solution
+
